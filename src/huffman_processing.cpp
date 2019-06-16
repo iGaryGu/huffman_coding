@@ -32,12 +32,48 @@ void huffman_processing::generateHuffman() {
         mMin.push(item, &size);
         mhead = item.node;
     }
+    traverse(mhead, string(""));
     //printf("head total cnt : %d\n", mhead->mfreq);
 }
 
-void huffman_processing::encode() {
+void huffman_processing::traverse(huffmanNode* node, string s) {
+    
+    if (node->left != nullptr) {
+        traverse(node->left, s+"0");
+    }
+    if (node->left == nullptr && node->right == nullptr) {
+        // leaf node and create new code for character
+//        printf("\tCodebook, [char]: %c = %s\n", node->mch, s.c_str());
+        mMap[node->mch] = s;
+        return;
+    }
+    if (node->right != nullptr) {
+        traverse(node->right, s+"1");
+    }
 
+}
 
+void huffman_processing::encode(const char* in_path, const char* out_path) {
+    file_ops in, out;
+    char ch;
+    size_t count = 0;
+
+    if (!in.open(in_path, true)) {
+        printf("file(%s) open failed!\n", in_path);
+        exit(1);
+    }
+    if (!out.open(out_path, false)) {
+        printf("file(%s) open failed!\n", out_path);
+        exit(1);
+    }
+    
+    while((ch = in.readChar()) != EOF) {
+        auto temp = mMap[ch];
+        mEncodeBitStream += temp;
+        count++;
+    }
+//    printf("length = %zu, count = %zu origin bit = %zu\n", mEncodeBitStream.length(), count, count * 8);
+    out.output(mEncodeBitStream); 
 }
 
 void huffman_processing::decode() {

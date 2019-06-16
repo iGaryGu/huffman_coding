@@ -1,6 +1,40 @@
 #include "file.h"
 #include "common.h"
 
+bool file_ops::open(const char* path, bool breadops) {
+    bool ret = true;
+    if (breadops) {
+        pFile = fopen(path, "r");
+    } else {
+        pFile = fopen(path, "wb");
+    }
+    if (UNLIKELY(pFile == NULL)) {
+        ret = false;
+        printf("file open fail! readops : %d", breadops);
+    }
+    return ret;
+}
+
+char file_ops::readChar() {
+    return getc(pFile);
+}
+
+bool file_ops::output(string& s) {
+    bool ret = true;
+    const char* str = s.c_str();
+    fwrite(str, sizeof(char)*s.length(), 1, pFile);
+    return ret;
+}
+
+
+file_ops::~file_ops() {
+    if (fclose(pFile)) {
+        printf("close file failed!\n");
+        exit(1);
+    }
+}
+
+
 bool Record::readFile(const char* path) {
     bool ret = true;
     FILE* pFile = NULL;
@@ -20,11 +54,7 @@ bool Record::readFile(const char* path) {
             }
         }
         fclose(pFile);
-//        mContent.resize(mRecord.size()+1);
-//        int index = 1;
-//        for (auto itr = mRecord.begin(); itr != mRecord.end(); itr++, index++) {
-//            mContent[index] = make_pair((*itr).first, (*itr).second);
-//        }
+
     }
 
     return ret;
@@ -42,3 +72,4 @@ void Record::dump() {
         printf("[%c] = %d\n", (*itr).first, (*itr).second);
     }
 }
+

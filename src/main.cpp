@@ -4,6 +4,7 @@
 #include "huffman_processing.h"
 
 #define FILEPATH "/home/garygu/huffman_coding/speech.txt"
+#define OUTPATH "/home/garygu/huffman_coding/encoded_speech.txt"
 
 int main (int argc, char* argv[]) {
 
@@ -21,6 +22,7 @@ int main (int argc, char* argv[]) {
 //        pq.dump();
         hfp.init(std::move(pq));
         hfp.generateHuffman();
+        hfp.encode(FILEPATH, OUTPATH);
     }
 
     pq.uninit();

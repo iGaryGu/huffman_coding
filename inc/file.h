@@ -8,6 +8,19 @@
 using namespace std;
 class priority_queue;
 
+class file_ops {
+public:
+    file_ops() : pFile(NULL) {}
+    ~file_ops();
+    bool open(const char* path, bool breadops);
+    char readChar();
+    bool output(string& s);
+    bool close();
+
+private:
+    FILE* pFile;
+};
+
 class Record {
 public:
     friend priority_queue;
