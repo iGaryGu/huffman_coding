@@ -13,7 +13,8 @@ bool Record::readFile(const char* path) {
         while ((ch = getc(pFile)) != EOF) {
             auto itr = mRecord.find(ch);
             if (itr == mRecord.end()) {
-                mRecord[ch] = 0;
+                mRecord[ch] = 0; // initialized
+                mRecord[ch]++;
             } else {
                 mRecord[ch]++;
             }

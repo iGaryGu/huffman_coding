@@ -9,6 +9,7 @@ int main (int argc, char* argv[]) {
 
     Record record;
     priority_queue pq;
+    huffman_processing hfp;
     bool ret = record.readFile((char*)FILEPATH);
     if (!ret) {
         printf("read file failed!\n");
@@ -18,6 +19,8 @@ int main (int argc, char* argv[]) {
         pq.init(std::move(record));
         pq.generatePQ();
 //        pq.dump();
+        hfp.init(std::move(pq));
+        hfp.generateHuffman();
     }
 
     pq.uninit();
