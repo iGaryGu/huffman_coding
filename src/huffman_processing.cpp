@@ -18,13 +18,13 @@ void huffman_processing::generateHuffman() {
 //        printf("first : [%c] = %d , second : [%c] = %d\n", 
 //                first.mch, first.mfreq, second.mch, second.mfreq);
         int freq = first.mfreq + second.mfreq;
-        huffmanNode* node = new huffmanNode(freq, 0);
+        shared_ptr<huffmanNode> node = make_shared<huffmanNode>(freq, 0);
         if (!first.virtualNode)
-            node->left = new huffmanNode(first.mfreq, first.mch);
+            node->left = make_shared<huffmanNode>(first.mfreq, first.mch);
         else
             node->left = first.node;
         if (!second.virtualNode)
-            node->right = new huffmanNode(second.mfreq, second.mch);
+            node->right = make_shared<huffmanNode>(second.mfreq, second.mch);
         else
             node->right = second.node;
 
@@ -36,7 +36,7 @@ void huffman_processing::generateHuffman() {
     //printf("head total cnt : %d\n", mhead->mfreq);
 }
 
-void huffman_processing::traverse(huffmanNode* node, string s) {
+void huffman_processing::traverse(shared_ptr<huffmanNode> node, string s) {
     
     if (node->left != nullptr) {
         traverse(node->left, s+"0");
@@ -76,12 +76,41 @@ void huffman_processing::encode(const char* in_path, const char* out_path) {
     out.output(mEncodeBitStream); 
 }
 
-void huffman_processing::decode() {
+void huffman_processing::decode(const char* in_path, const char* out_path) {
+    file_ops in, out;
+    char ch;
+    if (!in.open(in_path, true)) {
+        printf("file(%s) open failed!\n", in_path);
+        exit(1);
+    }
+    if (!out.open(out_path, false)) {
+        printf("file(%s) open failed!\n", out_path);
+        exit(1);
+    }
 
+    parse(in, mhead);
+
+    out.output(mDecodeBitStream);
+
+}
+
+void huffman_processing::parse(file_ops& in_file, shared_ptr<huffmanNode> node) {
+    char ch;
+    while((ch = in_file.readChar()) != EOF) {
+        if (node->left == nullptr && node->right ==nullptr) {
+            mDecodeBitStream += node->mch;
+            node = mhead;
+        }
+        if (ch == '0') node = node->left;
+        else if (ch == '1') node = node->right;
+
+    }
+    
 }
 
 void huffman_processing::dump() {
     //traversal the huffman tree
+
 }
 
 void huffman_processing::uninit() {

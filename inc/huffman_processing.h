@@ -13,15 +13,17 @@ public:
     void init(priority_queue&& pq);
     void generateHuffman();
     void encode(const char* in_path, const char* out_path);
-    void decode();
+    void decode(const char* in_file, const char* out_file);
     void uninit();
     void dump();
 private:
-    void traverse(huffmanNode* node, string s);
+    void traverse(shared_ptr<huffmanNode> node, string s);
+    void parse(file_ops& in_file, shared_ptr<huffmanNode> node);
     priority_queue mMin;
-    huffmanNode* mhead;
+    shared_ptr<huffmanNode> mhead;
     unordered_map<char, string> mMap;
     string mEncodeBitStream;
+    string mDecodeBitStream;
 
 };
 

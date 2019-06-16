@@ -3,9 +3,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include <memory>
 
 #define LIKELY(x) __builtin_expect(!!(x), 1)
 #define UNLIKELY(x) __builtin_expect(!!(x), 0)
+
+using namespace std;
 
 struct huffmanNode {
     huffmanNode()
@@ -23,13 +27,13 @@ struct huffmanNode {
 
     int mfreq;
     char mch;
-    huffmanNode* right;
-    huffmanNode* left;
+    shared_ptr<huffmanNode> right;
+    shared_ptr<huffmanNode> left;
 };
 
 struct Item {
     char mch;
-    huffmanNode *node;
+    shared_ptr<huffmanNode> node;
     int mfreq;
     bool virtualNode;
     Item()
@@ -50,7 +54,7 @@ struct Item {
         mfreq(freq),
         virtualNode(virt)
     {}
-    Item(huffmanNode *n, int freq, bool virt)
+    Item(shared_ptr<huffmanNode> n, int freq, bool virt)
         : node(n),
         mfreq(freq),
         virtualNode(virt)
