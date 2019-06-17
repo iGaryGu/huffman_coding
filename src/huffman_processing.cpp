@@ -73,7 +73,7 @@ void huffman_processing::encode(const char* in_path, const char* out_path) {
         count++;
     }
 //    printf("length = %zu, count = %zu origin bit = %zu\n", mEncodeBitStream.length(), count, count * 8);
-    out.output(mEncodeBitStream); 
+    out.output(mEncodeBitStream, true);
 }
 
 void huffman_processing::decode(const char* in_path, const char* out_path) {
@@ -90,7 +90,7 @@ void huffman_processing::decode(const char* in_path, const char* out_path) {
 
     parse(in, mhead);
 
-    out.output(mDecodeBitStream);
+    out.output(mDecodeBitStream, false);
 
 }
 

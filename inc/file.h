@@ -14,7 +14,7 @@ public:
     ~file_ops();
     bool open(const char* path, bool breadops);
     char readChar();
-    bool output(string& s);
+    bool output(string& s, bool binary);
     bool close();
 
 private:

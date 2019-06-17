@@ -27,7 +27,7 @@ int main (int argc, char* argv[]) {
         hfp.encode(FILEPATH, OUTPATH);
         
         // decode
-        hfp.decode(OUTPATH, DECODEPATH);
+//        hfp.decode(OUTPATH, DECODEPATH);
         hfp.uninit();
     }
 

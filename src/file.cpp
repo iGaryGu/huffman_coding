@@ -19,10 +19,33 @@ char file_ops::readChar() {
     return getc(pFile);
 }
 
-bool file_ops::output(string& s) {
+bool file_ops::output(string& s, bool binary) {
     bool ret = true;
-    const char* str = s.c_str();
-    fwrite(str, sizeof(char)*s.length(), 1, pFile);
+    if (!binary) {
+        const char* str = s.c_str();
+        fwrite(str, sizeof(char)*s.length(), 1, pFile);
+    } else {
+        int length = s.length();
+        char input = 0;
+        auto byteMask = [&](int start, int end) -> unsigned char {
+            int shift_cnt = end - start;
+            unsigned char byteConvert = 0;
+            for(int i = start; i <= end; i++) {
+                byteConvert |= (((s[i] - '0') & 1) << shift_cnt);
+                shift_cnt--;
+            }
+            return byteConvert;
+        };
+        for(int i = 0; i < length; i += 8) {
+            auto ret = byteMask(i, i+7);
+            fwrite((void*)&ret, sizeof(unsigned char), 1, pFile);
+            if (UNLIKELY(i+8 >=length)) {
+                ret = byteMask(i, length-1);
+                fwrite((void*)&ret, sizeof(unsigned char), 1, pFile);
+                break;
+            }
+        }
+    }
     return ret;
 }
 
