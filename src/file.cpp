@@ -19,6 +19,18 @@ char file_ops::readChar() {
     return getc(pFile);
 }
 
+string file_ops::readBinary2string() {
+    size_t size = 0;
+    fseek(pFile, 0, SEEK_END);
+    size = ftell(pFile);
+    fseek(pFile, 0, SEEK_SET);
+    string str;
+    str.resize(size);
+    fread(&str[0], 1, size, pFile);
+    return str;
+}
+
+
 bool file_ops::output(string& s, bool binary) {
     bool ret = true;
     if (!binary) {

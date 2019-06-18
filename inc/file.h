@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unordered_map>
 #include <vector>
+#include <string>
 
 using namespace std;
 class priority_queue;
@@ -14,6 +15,7 @@ public:
     ~file_ops();
     bool open(const char* path, bool breadops);
     char readChar();
+    string readBinary2string();
     bool output(string& s, bool binary);
     bool close();
 

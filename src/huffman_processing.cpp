@@ -95,15 +95,31 @@ void huffman_processing::decode(const char* in_path, const char* out_path) {
 }
 
 void huffman_processing::parse(file_ops& in_file, shared_ptr<huffmanNode> node) {
-    char ch;
-    while((ch = in_file.readChar()) != EOF) {
-        if (node->left == nullptr && node->right ==nullptr) {
+    string str;
+    unsigned char byte[8] = {0};
+    unsigned char mask = 1;
+    string decodeBitStream;
+    // restore bit stream string
+    str = in_file.readBinary2string();
+    size_t num_char = str.length();
+    // remove '\0' : num_char-1
+    for (size_t i = 0; i < num_char-1; i++) {
+        for(int j = 0; j < 8; j++) {
+            byte[j] = ((unsigned char)str[i] & (mask << j)) != 0 ? '1' : '0';
+        }
+        for (int j = 7; j >=0; j--) {
+            decodeBitStream += byte[j];
+        }
+    }
+    // traverse the huffman tree
+    int size = decodeBitStream.length();
+    for(int i = 0; i < size; i++) {
+        if (node->left == nullptr && node->right == nullptr) {
             mDecodeBitStream += node->mch;
             node = mhead;
         }
-        if (ch == '0') node = node->left;
-        else if (ch == '1') node = node->right;
-
+        if (decodeBitStream[i] == '0') node = node->left;
+        else if (decodeBitStream[i] == '1') node = node->right;
     }
     
 }
